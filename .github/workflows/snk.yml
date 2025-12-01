@@ -3,7 +3,7 @@ name: generate animation
 on:
   schedule:
     - cron: "0 0 * * *"
-  workflow_dispatch:
+  workflow_dispatch: {}
   push:
     branches:
       - main
@@ -17,31 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate snake images
+      - name: generate github-contribution-grid-snake.svg
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            snakeImages/github-contribution-grid-snake.svg
-            snakeImages/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/snakeImages/github-contribution-grid-snake.svg
+            dist/snakeImages/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      # --- OVERWRITE ONLY THE TARGET FILES ---
-      - name: Commit updated images without deleting other files
-        run: |
-          git config user.name  "github-actions"
-          git config user.email "github-actions@github.com"
-
-          # Switch to gh-pages, or create if missing
-          git fetch origin gh-pages || true
-          git checkout gh-pages || git checkout --orphan gh-pages
-
-          # Copy the newly generated images into the same folder
-          mkdir -p snakeImages
-          cp -f snakeImages/* .
-
-          # Stage only the updated images
-          git add snakeImages/github-contribution-grid-snake.svg
-          git add snakeImages/github-contribution-grid-snake-dark.svg
-
-          git commit -m "Update snake images ($(date))" || echo "Nothing to commit"
-          git push origin gh-pages
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Generate snake animation
