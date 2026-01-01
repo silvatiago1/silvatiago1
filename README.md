@@ -1,5 +1,3 @@
-<img align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=silvatiago1"/>
-
 <picture>
   <source srcset="dist/snakeImages/github-contribution-grid-snake-dark.svg" />
   <img alt="github-snake" src="github-snake.svg" />
